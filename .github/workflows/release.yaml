@@ -11,15 +11,30 @@ env:
 
 jobs:
   release:
+    env:
+      CL_VERSION: 0.8.29
+      CHAINLOOP_ROBOT_ACCOUNT: ${{ secrets.CHAINLOOP_WF_RELEASE }}
     name: Release Frontend Container Image
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag' # Guard to make sure we are releasing once
     permissions:
       packages: write
       contents: read # required for docker env setup
+
     steps:
       - name: Install Cosign
         uses: sigstore/cosign-installer@v2.5.0
+
+      - name: Write Cosign key
+        run: echo "$COSIGN_KEY" > /tmp/cosign.key
+        env:
+          COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
+
+      - name: Install ChainLoop
+        run: |
+          curl -sfL https://chainloop.dev/install.sh | bash -s -- --version v${{ env.CL_VERSION }}
+          sudo install chainloop /usr/local/bin
+          chainloop version
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -33,6 +48,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Initialize Attestation
+        run: |
+          chainloop attestation init --graceful-exit=false
+
       - id: docker_meta
         uses: docker/metadata-action@v3.6.0
         with:
@@ -40,11 +59,18 @@ jobs:
           tags: type=ref,event=tag
 
       - name: Build and Push container images
+        id: docker_build
         uses: docker/build-push-action@v3
         with:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
+
+      - name: Add Attestation Artifacts
+        run: |
+          chainloop attestation add --name frontend --value  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${DIGEST}
+        env:
+          DIGEST: ${{ steps.docker_build.outputs.digest }}
 
       - name: Sign image
         run: |
@@ -53,3 +79,21 @@ jobs:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
           COSIGN_PRIVATE_KEY: ${{secrets.COSIGN_KEY}}
           COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
+
+      - name: Finish and Record Attestation
+        if: ${{ success() }}
+        run: |
+          chainloop attestation status --full
+          chainloop attestation push --key /tmp/cosign.key --graceful-exit=false
+        env:
+          CHAINLOOP_SIGNING_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+
+      - name: Mark attestation as failed
+        if: ${{ failure() }}
+        run: |
+          chainloop attestation reset
+
+      - name: Mark attestation as cancelled
+        if: ${{ cancelled() }}
+        run: |
+          chainloop attestation reset --trigger cancellation
