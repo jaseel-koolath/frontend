@@ -11,9 +11,9 @@ import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { ReactNode, useEffect, useState } from "react";
-import { WorkflowRunItem } from "../../../../gen/controlplane/v1/response_messages";
+import { WorkflowRunItem } from "@pb/controlplane/v1/response_messages";
 
-export const ListItems = ({
+export const RunsListSidebar = ({
   runs,
   onSelect,
 }: {
