@@ -43,9 +43,38 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          textTransform: "Capitalize",
+        },
+        overline: {
+          color: "#374151",
+          fontWeight: "600",
+          textTransform: "Uppercase",
+        },
+      },
+    },
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true,
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px'
+        },
+      },
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          padding: "32px 24px",
+          "&:last-child": {
+            paddingBottom: "32px",
+          },
+        },
       },
     },
     MuiCardHeader: {
@@ -91,6 +120,29 @@ export const theme = createTheme({
           flexDirection: "column",
           height: "100%",
           width: "100%",
+        },
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#F3F4F6",
+          ".MuiTableCell-root": {
+            color: "#374151",
+          },
+          borderBottom: "none",
+          "& .MuiTableCell-root": {
+            borderBottom: "none",
+            fontSize: "12px",
+            fontWeight: 600,
+            lineHeight: 1,
+            letterSpacing: 0.5,
+            textTransform: "uppercase",
+          },
+          "& .MuiTableCell-paddingCheckbox": {
+            paddingTop: 4,
+            paddingBottom: 4,
+          },
         },
       },
     },
