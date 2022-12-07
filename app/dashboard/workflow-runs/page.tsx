@@ -2,7 +2,6 @@
 
 import {
   Box,
-  Container,
   FormControl,
   Grid,
   InputLabel,
@@ -17,6 +16,7 @@ import { useAuth } from "@contexts/auth";
 import { useWorkflows } from "@lib/apiclient/workflows";
 import { Suspense, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { namespacedName } from "@lib/workflow-run-utils";
 
 export default function WorkflowRunsList({}: {}) {
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function WorkflowRunsList({}: {}) {
   }, [searchParams]);
 
   return (
-    <Container>
+    <>
       <Typography sx={{ m: 1 }} variant="h4">
         Workflow Runs
       </Typography>
@@ -59,7 +59,7 @@ export default function WorkflowRunsList({}: {}) {
           ></WorkflowRunsListResults>
         </Suspense>
       </Box>
-    </Container>
+    </>
   );
 }
 
@@ -97,7 +97,7 @@ const WorkflowSelector = ({
             <MenuItem value="">Any</MenuItem>
             {workflows?.result.map((run) => (
               <MenuItem value={run.id} key={run.id}>
-                {run.project}/{run.name}
+                {namespacedName(run)}
               </MenuItem>
             ))}
           </Select>
