@@ -1,11 +1,11 @@
 "use client";
 
 // These styles apply to every route in the application
-import "../styles/globals.css";
+import "@assets/styles/globals.css";
 import { apiErrorMiddleware } from "@lib/apiclient/middleware";
 import { SWRConfig } from "swr";
 import { ThemeProvider } from "@mui/material/styles";
-import { theme } from "../theme";
+import { theme } from "@assets/styles/theme";
 import { AuthProvider } from "@contexts/auth";
 import CssBaseline from "@mui/material/CssBaseline";
 

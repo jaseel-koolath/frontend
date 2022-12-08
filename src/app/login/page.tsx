@@ -3,7 +3,7 @@
 import ApiClient from "@lib/apiclient/client";
 import { useInfo } from "@lib/apiclient/status";
 import { Box, Button, Container, Grid } from "@mui/material";
-import { Google as GoogleIcon } from "../../icons/google";
+import GoogleIcon from "@mui/icons-material/Google";
 
 export default function Login() {
   const client = new ApiClient("");

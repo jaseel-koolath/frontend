@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import { AppBar, Avatar, Box, IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 import AccountPopover from "../account-popover";
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
@@ -58,9 +57,7 @@ export const DashboardNavbar = (props) => {
               width: 40,
               ml: 1,
             }}
-          >
-            <UserCircleIcon fontSize="small" />
-          </Avatar>
+          ></Avatar>
         </Toolbar>
       </DashboardNavbarRoot>
       <AccountPopover
